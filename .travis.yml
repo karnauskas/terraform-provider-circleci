@@ -21,6 +21,7 @@ script:
 
 branches:
   only:
+  - dev
   - master
 matrix:
   fast_finish: true
