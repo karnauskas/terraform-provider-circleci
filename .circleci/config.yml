@@ -1,0 +1,19 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:latest
+    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    steps:
+      - checkout
+      - run: bash scripts/gogetcookie.sh
+      - run: go get github.com/kardianos/govendor
+      - run: go get github.com/axw/gocov/gocov
+      - run: go get github.com/AlekSi/gocov-xml
+      - run: make test
+      - run: make vendor-status
+      - run: make vet
+      - run: mkdir -p /tmp/test-results
+      - run: gocov test github.com/{{ORG_NAME}}/{{REPO_NAME}} | gocov-xml | tee /tmp/test-results/coverage.xml
+      - store_test_results:
+          path: /tmp/test-results
