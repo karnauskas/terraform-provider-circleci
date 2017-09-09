@@ -1,6 +1,14 @@
 {
 	"comment": "",
 	"ignore": "test",
-	"package": [],
+	"package": [
+		{
+			"checksumSHA1": "mHNPR6lgEKGSp7Us+KtoZO9jsRA=",
+			"origin": "github.com/karnauskas/terraform-provider-circleci/vendor/github.com/jszwedko/go-circleci",
+			"path": "github.com/jszwedko/go-circleci",
+			"revision": "51c9700338a3255392981eb91b6fa24017389105",
+			"revisionTime": "2017-02-11T20:24:59Z"
+		}
+	],
 	"rootPath": "github.com/karnauskas/terraform-provider-circleci"
 }

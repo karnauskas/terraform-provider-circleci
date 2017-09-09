@@ -3,27 +3,26 @@ package circleci
 import (
 	"fmt"
 
-	circleci "github.com/ryanlower/go-circleci"
+	"github.com/jszwedko/go-circleci"
 )
 
 type Config struct {
-	ApiToken string
+	Token string
 }
 
-type CircleCIClient struct {
-	conn *circleci.Client
-}
+const noToken = `
+[Err] No API Token for CircleCI
 
-func (c *Config) Client() (interface{}, error) {
-	var client CircleCIClient
+`
 
-	if c.ApiToken == "" {
-		return nil, fmt.Errorf("[Err] No API Token for CircleCI")
+func (c *Config) Client() (*circleci.Client, error) {
+	if c.Token == "" {
+		return nil, fmt.Errorf(noToken)
 	}
 
-	fconn := circleci.NewClient(c.ApiToken)
-
-	client.conn = fconn
+	client := circleci.Client{
+		Token: c.Token,
+	}
 
 	return &client, nil
 }

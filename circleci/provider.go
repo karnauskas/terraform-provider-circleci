@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
+// Provider returns a terraform.ResourceProvider.
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
@@ -16,23 +17,21 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 
+		DataSourcesMap: map[string]*schema.Resource{
+			"circleci_me": dataSourceCircleciMe(),
+		},
+
 		ResourcesMap: map[string]*schema.Resource{},
 
-		ConfigureFunc: configureProvider,
+		ConfigureFunc: providerConfigure,
 	}
 }
 
-func configureProvider(d *schema.ResourceData) (interface{}, error) {
+func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	token := d.Get("token").(string)
 
-	//	client := &circleci.Client{
-	//		Token: token,
-	//	}
-
-	//	log.Println(client)
-
 	config := Config{
-		ApiToken: token,
+		Token: token,
 	}
 
 	return config.Client()

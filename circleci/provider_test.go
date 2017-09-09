@@ -1,17 +1,23 @@
 package circleci
 
 import (
-	//	"os"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 )
 
-var testAccProvider *schema.Provider
+var (
+	testAccProvider  *schema.Provider
+	testAccProviders map[string]terraform.ResourceProvider
+)
 
 func init() {
 	testAccProvider = Provider().(*schema.Provider)
+	testAccProviders = map[string]terraform.ResourceProvider{
+		"circleci": testAccProvider,
+	}
 }
 
 func TestProvider(t *testing.T) {
@@ -25,6 +31,7 @@ func TestProvider_impl(t *testing.T) {
 }
 
 func testAccPreCheck(t *testing.T) {
-	// We will use this function later on to make sure our test environment is valid.
-	// For example, you can make sure here that some environment variables are set.
+	if v := os.Getenv("CIRCLECI_API_TOKEN"); v == "" {
+		t.Fatal("CIRCLECI_API_TOKEN must be set for acceptance tests")
+	}
 }

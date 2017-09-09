@@ -1,11 +1,8 @@
 package circleci
 
 import (
-	//	"log"
-	//	"github.com/jszwedko/go-circleci"
-	//	circleci "github.com/ryanlower/go-circleci"
-
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/jszwedko/go-circleci"
 )
 
 func dataSourceCircleciMe() *schema.Resource {
@@ -13,24 +10,32 @@ func dataSourceCircleciMe() *schema.Resource {
 		Read: dataSourceCircleciMeRead,
 
 		Schema: map[string]*schema.Schema{
-			"login": {
+			"login": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: false,
-				ForceNew: true,
+				Elem:     schema.TypeString,
+				Computed: true,
+			},
+			"admin": &schema.Schema{
+				Type:     schema.TypeBool,
+				Elem:     schema.TypeBool,
+				Computed: true,
 			},
 		},
 	}
 }
 
 func dataSourceCircleciMeRead(d *schema.ResourceData, meta interface{}) error {
+	client := meta.(*circleci.Client)
 
-	//	log.Println(meta)
+	me, err := client.Me()
+	if err != nil {
+		return err
+	}
 
-	//	client := meta.()
+	d.SetId(me.Login)
 
-	//	return client.Me()
-
-	d.Set("login", "meme")
+	d.Set("login", me.Login)
+	d.Set("admin", me.Admin)
 
 	return nil
 }
